@@ -29,7 +29,7 @@ export default function ReportingChatPage(props: ReportingChatPageProps) {
                   navigator.clipboard.writeText(message.content);
                 }}
                 profilePicture={
-                  message.role === "assistant" ? "/ai-icon.png" : undefined
+                  message.role === "assistant" ? "/logo.jpeg" : undefined
                 }
               >
                 <MessageContent message={message} />
