@@ -1,116 +1,286 @@
 "use client";
 
-import { sortByTimestamp } from "@/features/common/util";
-import { FC } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import {
   ChatThreadModel,
-  MenuItemsGroup,
   MenuItemsGroupName,
 } from "../chat-services/models";
-import { ChatGroup } from "./chat-group";
+
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+import { arrayMove } from "@dnd-kit/sortable";
 import { ChatMenuItem } from "./chat-menu-item";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/features/ui/select";
 
 interface ChatMenuProps {
   menuItems: Array<ChatThreadModel>;
 }
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/ui/select";
-import { useState } from "react";
-
 export const ChatMenu: FC<ChatMenuProps> = (props) => {
-  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const [sortOrder, setSortOrder] = useState<"custom" | "newest" | "oldest">("newest");
+  const [activeMenuItems, setActiveMenuItems] = useState<ChatThreadModel[]>(() => {
+    const storedOrder = localStorage.getItem("chatMenuOrder");
+    if (storedOrder) {
+      const orderIds = JSON.parse(storedOrder) as string[];
+      const ordered = orderIds
+        .map(id => props.menuItems.find(item => item.id === id))
+        .filter(Boolean) as ChatThreadModel[];
 
-  const menuItemsGrouped = GroupChatThreadByType(props.menuItems, sortOrder);
+      props.menuItems.forEach(item => {
+        if (!ordered.find(i => i.id === item.id)) {
+          ordered.push(item);
+        }
+      });
+      return ordered;
+    }
+    return props.menuItems;
+  });
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+
+      if (!over) {
+        return;
+      }
+
+      if (active.id === over.id) {
+        return;
+      }
+
+      const grouped = GroupChatThreadByType(activeMenuItems, sortOrder);
+
+      let foundGroupName: MenuItemsGroupName | null = null;
+
+      for (const groupName in grouped) {
+        const ids = grouped[groupName as MenuItemsGroupName].map((i) =>
+          i.id.toString()
+        );
+        if (ids.includes(active.id.toString()) && ids.includes(over.id.toString())) {
+          foundGroupName = groupName as MenuItemsGroupName;
+          break;
+        }
+      }
+
+      if (!foundGroupName) {
+        return;
+      }
+
+      const groupItems = grouped[foundGroupName];
+      const oldIndex = groupItems.findIndex((item) => item.id.toString() === active.id.toString());
+      const newIndex = groupItems.findIndex((item) => item.id.toString() === over.id.toString());
+
+      if (oldIndex === -1 || newIndex === -1) {
+        return;
+      }
+
+      const reorderedGroup = arrayMove(groupItems, oldIndex, newIndex);
+
+      const updatedMenuItems: ChatThreadModel[] = [];
+      (["Bookmarked", "Past 7 days", "Previous"] as MenuItemsGroupName[]).forEach(
+        (group) => {
+          if (group === foundGroupName) {
+            updatedMenuItems.push(...reorderedGroup);
+          } else {
+            updatedMenuItems.push(...grouped[group]);
+          }
+        }
+      );
+
+      setActiveMenuItems(updatedMenuItems);
+      setSortOrder("custom");
+
+      localStorage.setItem(
+        "chatMenuOrder",
+        JSON.stringify(updatedMenuItems.map((item) => item.id))
+      );
+    },
+    [activeMenuItems, sortOrder]
+  );
+
+  const sortMenuItemsByDate = (items: ChatThreadModel[], order: "newest" | "oldest") => {
+    const sorted = [...items].sort((a, b) => {
+      const dateA = new Date(a.lastMessageAt).getTime();
+      const dateB = new Date(b.lastMessageAt).getTime();
+      return order === "newest" ? dateB - dateA : dateA - dateB;
+    });
+    return sorted;
+  };
+
+  const menuItemsGrouped = GroupChatThreadByType(activeMenuItems, sortOrder);
 
   return (
     <div className="px-3 flex flex-col gap-8 overflow-hidden">
-      <Select onValueChange={(value) => setSortOrder(value as "newest" | "oldest")}>
+      <Select
+        value={sortOrder}
+        onValueChange={(value) => {
+          const newSortOrder = value as "newest" | "oldest";
+          setSortOrder(newSortOrder);
+          setActiveMenuItems((prevItems) => {
+            return [...prevItems].sort((a, b) => {
+              const dateA = new Date(a.lastMessageAt).getTime();
+              const dateB = new Date(b.lastMessageAt).getTime();
+              return newSortOrder === "newest" ? dateB - dateA : dateA - dateB;
+            });
+          });
+        }}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="newest">Newest to Oldest</SelectItem>
           <SelectItem value="oldest">Oldest to Newest</SelectItem>
+          <SelectItem value="custom">Custom Order</SelectItem>
         </SelectContent>
       </Select>
-      {Object.entries(menuItemsGrouped).map(
-        ([groupName, groupItems], index) => (
-          <ChatGroup key={index} title={groupName}>
-            {groupItems?.map((item) => (
-              <ChatMenuItem
-                key={item.id}
-                href={`/chat/${item.id}`}
-                chatThread={item}
-              >
-                {item.name.replace("\n", "")}
-              </ChatMenuItem>
-            ))}
-          </ChatGroup>
-        )
-      )}
+
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        {Object.entries(menuItemsGrouped).map(([groupName, groupItems]) => (
+          <ChatGroupComponent key={groupName} title={groupName} items={groupItems} />
+        ))}
+      </DndContext>
+    </div>
+  );
+};
+
+interface SortableItemProps {
+  item: ChatThreadModel;
+}
+
+export function SortableItem({ item }: SortableItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: item.id.toString(),
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const draggingRef = useRef(false);
+
+  const handleDragStart = () => {
+    draggingRef.current = true;
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className="flex items-center"
+      onDragStart={handleDragStart}
+    >
+      <div {...listeners} className="drag-handle cursor-grab p-3">
+        ⠿
+      </div>
+      <ChatMenuItem
+        key={item.id}
+        href={`/chat/${item.id}`}
+        chatThread={item}
+        onClick={(e) => {
+          if (draggingRef.current) {
+            e.preventDefault();
+          }
+        }}
+      >
+        {item.name.replace("\n", "")}
+      </ChatMenuItem>
+    </div>
+  );
+}
+
+interface ChatGroupProps {
+  title: string;
+  items: ChatThreadModel[];
+}
+
+export const ChatGroupComponent: FC<ChatGroupProps> = ({ title, items }) => {
+  return <ChatGroupWrapper title={title} items={items} />;
+};
+
+const ChatGroupWrapper: FC<ChatGroupProps> = ({ title, items }) => {
+  return (
+    <div key={title}>
+      <h3>{title}</h3>
+      <SortableContext items={items.map((item) => item.id.toString())}>
+        {items.map((item) => (
+          <SortableItem key={item.id.toString()} item={item} />
+        ))}
+      </SortableContext>
     </div>
   );
 };
 
 export const GroupChatThreadByType = (
   menuItems: Array<ChatThreadModel>,
-  sortOrder: "newest" | "oldest"
+  sortOrder: "custom" | "newest" | "oldest"
 ) => {
-  const groupedMenuItems: Array<MenuItemsGroup> = [];
+  let orderedMenuItems: ChatThreadModel[] = [...menuItems];
 
-  // todays date
-  const today = new Date();
-  // 7 days ago
-  const sevenDaysAgo = new Date(today);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  if (sortOrder === "custom") {
+    const storedOrder = localStorage.getItem("chatMenuOrder");
+    if (storedOrder) {
+      const order = JSON.parse(storedOrder) as string[];
+      orderedMenuItems = order
+        .map((id) => menuItems.find((item) => item.id.toString() === id.toString()))
+        .filter(Boolean) as ChatThreadModel[];
 
-  const sortedMenuItems = [...menuItems].sort(sortByTimestamp);
-
-  if (sortOrder === "oldest") {
-    sortedMenuItems.reverse();
+      menuItems.forEach((item) => {
+        if (!orderedMenuItems.find((orderedItem) => orderedItem.id === item.id)) {
+          orderedMenuItems.push(item);
+        }
+      });
+    }
+  } else {
+    orderedMenuItems = [...menuItems].sort((a, b) => {
+      const dateA = new Date(a.lastMessageAt).getTime();
+      const dateB = new Date(b.lastMessageAt).getTime();
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
   }
 
-  sortedMenuItems.forEach((el) => {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const menuItemsGrouped: Record<MenuItemsGroupName, ChatThreadModel[]> = {
+    Bookmarked: [],
+    "Past 7 days": [],
+    Previous: [],
+  };
+
+  orderedMenuItems.forEach((el) => {
     if (el.bookmarked) {
-      groupedMenuItems.push({
-        ...el,
-        groupName: "Bookmarked",
-      });
+      menuItemsGrouped["Bookmarked"].push(el);
     } else if (new Date(el.lastMessageAt) > sevenDaysAgo) {
-      groupedMenuItems.push({
-        ...el,
-        groupName: "Past 7 days",
-      });
+      menuItemsGrouped["Past 7 days"].push(el);
     } else {
-      groupedMenuItems.push({
-        ...el,
-        groupName: "Previous",
-      });
+      menuItemsGrouped["Previous"].push(el);
     }
   });
 
-  const menuItemsGrouped = groupedMenuItems.reduce((acc, el) => {
-    const key = el.groupName;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(el);
-    return acc;
-  }, {} as Record<MenuItemsGroupName, Array<MenuItemsGroup>>);
-
-  const records: Record<MenuItemsGroupName, Array<MenuItemsGroup>> = {
-    Bookmarked:
-      menuItemsGrouped["Bookmarked"]?.sort(sortByTimestamp) ?? [],
-    "Past 7 days":
-      menuItemsGrouped["Past 7 days"]?.sort(sortByTimestamp) ?? [],
-    Previous: menuItemsGrouped["Previous"]?.sort(sortByTimestamp) ?? [],
-  };
-
-  if (sortOrder === "oldest") {
-    records["Bookmarked"]?.reverse();
-    records["Past 7 days"]?.reverse();
-    records["Previous"]?.reverse();
-  }
-
-  return records;
+  return menuItemsGrouped;
 };
+
