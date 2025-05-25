@@ -2,6 +2,8 @@ import { AI_DESCRIPTION, AI_NAME } from "@/features/theme/theme-config";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/features/theme/theme-provider";
+import { Toaster } from "@/features/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,10 +17,6 @@ export const metadata: Metadata = {
   description: AI_DESCRIPTION,
 }
 
-interface LayoutClientProps {
-  children: React.ReactNode;
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -27,7 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className={`${inter.className} font-inter`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
