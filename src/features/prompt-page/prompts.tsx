@@ -1,3 +1,4 @@
+import { PromptModel } from "@/features/prompt-page/models";
 import { AI_NAME } from "@/features/theme/theme-config";
 import { Book } from "lucide-react";
 import { useState } from "react";
@@ -6,12 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "../ui/dialog";
-import { PromptModel } from "@/features/prompt-page/models";
 
 export const Prompts = (props: {
   selectedPrompt: (e: string) => void;
@@ -41,10 +40,10 @@ export const Prompts = (props: {
               <Card
                 key={index}
                 onClick={() => onPromptClicked(item)}
-                className="flex flex-col h-[250px] hover:bg-secondary/80"
+                className="flex flex-col h-[250px] hover:bg-secondary-foreground"
               >
                 <CardHeader className="gap-2">
-                  <CardTitle className="text-2xl flex gap-2">
+                  <CardTitle className="text-2xl flex gap-2 text-foreground">
                     {item.name}
                   </CardTitle>
                 </CardHeader>
