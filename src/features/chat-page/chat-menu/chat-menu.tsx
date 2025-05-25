@@ -138,17 +138,19 @@ export const ChatMenu: FC<ChatMenuProps> = (props) => {
 
   return (
     <div className="px-3 flex flex-col gap-8 overflow-hidden">
-      <Select onValueChange={(value) => {
-        const newSortOrder = value as "newest" | "oldest";
-        setSortOrder(newSortOrder);
-        setActiveMenuItems((prevItems) => {
-          return [...prevItems].sort((a, b) => {
-            const dateA = new Date(a.lastMessageAt).getTime();
-            const dateB = new Date(b.lastMessageAt).getTime();
-            return newSortOrder === "newest" ? dateB - dateA : dateA - dateB;
+      <Select
+        value={sortOrder}
+        onValueChange={(value) => {
+          const newSortOrder = value as "newest" | "oldest";
+          setSortOrder(newSortOrder);
+          setActiveMenuItems((prevItems) => {
+            return [...prevItems].sort((a, b) => {
+              const dateA = new Date(a.lastMessageAt).getTime();
+              const dateB = new Date(b.lastMessageAt).getTime();
+              return newSortOrder === "newest" ? dateB - dateA : dateA - dateB;
+            });
           });
-        });
-      }}>
+        }}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
