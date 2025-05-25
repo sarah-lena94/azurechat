@@ -39,7 +39,7 @@ export const ChatMessageArea = (props: {
     case "user":
       if (props.profilePicture) {
         profile = (
-          <Avatar>
+          <Avatar className="w-8 h-8 border-2 border-[#FF7D00] shadow-md transition-shadow duration-300 hover:shadow-lg">
             <AvatarImage src={props.profilePicture} />
           </Avatar>
         );
@@ -74,7 +74,7 @@ export const ChatMessageArea = (props: {
           {profile}
           <div
             className={cn(
-              "text-primary capitalize items-center flex",
+              "text-primary capitalize items-center flex font-medium text-[#FF7D00]",
               props.role === "function" || props.role === "tool"
                 ? "text-muted-foreground text-sm"
                 : ""
@@ -102,7 +102,7 @@ export const ChatMessageArea = (props: {
         </div>
       </div>
       <div className="flex flex-col gap-2 flex-1 px-10">
-        <div className="prose prose-slate dark:prose-invert whitespace-break-spaces prose-p:leading-relaxed prose-pre:p-0 max-w-none">
+        <div className="text-gray-800 dark:text-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white dark:bg-[#0A234B]">
           {props.children}
         </div>
       </div>
