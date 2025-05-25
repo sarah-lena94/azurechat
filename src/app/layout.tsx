@@ -1,39 +1,33 @@
-import { AI_NAME } from "@/features/theme/theme-config";
+import { AI_DESCRIPTION, AI_NAME } from "@/features/theme/theme-config";
 import { ThemeProvider } from "@/features/theme/theme-provider";
-import { Toaster } from "@/features/ui/toaster";
-import { cn } from "@/ui/lib";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+})
 
-export const metadata = {
+export const metadata: Metadata = {
   title: AI_NAME,
-  description: AI_NAME,
-};
-
-export const dynamic = "force-dynamic";
+  description: AI_DESCRIPTION,
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full w-full overflow-hidden text-sm">
-      <body
-        className={cn(inter.className, "h-full w-full flex  bg-background")}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <body className={`${inter.className} font-inter`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange={false}>
           {children}
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
