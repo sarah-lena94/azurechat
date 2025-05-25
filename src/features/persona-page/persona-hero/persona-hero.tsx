@@ -7,9 +7,12 @@ export const PersonaHero = () => {
   return (
     <Hero
       title={
-        <>
-          <VenetianMask size={36} strokeWidth={1.5} /> Persona
-        </>
+        <div className="flex items-center gap-3 mb-4">
+          <VenetianMask className="w-8 h-8 text-[var(--aithoria-blue-medium)] dark:text-[var(--aithoria-cyan)]" />
+          <h1 className="text-3xl font-bold text-[var(--aithoria-dark)] dark:text-white bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
+            Persona
+          </h1>
+        </div>
       }
       description={`  Persona is a representation of a personality that you can use to
     have a conversation with.`}
@@ -53,7 +56,7 @@ Example:
         onClick={() =>
           personaStore.newPersonaAndOpen({
             name: "ReactJS Expert",
-            personaMessage: `You are a ReactJS expert who can write clean functional components. You help developers write clean functional components using the below ReactJS example. 
+            personaMessage: `You are a ReactJS expert who can write clean functional components. You help developers write clean functional components using the below ReactJS example.
               \nExample:
 import * as React from "react";
 
