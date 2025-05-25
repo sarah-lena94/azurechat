@@ -1,8 +1,6 @@
 "use client";
 
-import { sortByTimestamp } from "@/features/common/util";
-
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import {
   ChatThreadModel,
   MenuItemsGroupName,
@@ -11,15 +9,15 @@ import {
 import {
   DndContext,
   DragEndEvent,
+  PointerSensor,
   useSensor,
   useSensors,
-  PointerSensor,
 } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { ChatMenuItem } from "./chat-menu-item";
 import { arrayMove } from "@dnd-kit/sortable";
+import { ChatMenuItem } from "./chat-menu-item";
 
 import {
   Select,
@@ -63,10 +61,8 @@ export const ChatMenu: FC<ChatMenuProps> = (props) => {
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
-      console.log("Drag ended", { activeId: active.id, overId: over?.id });
 
       if (!over) {
-        console.warn("Dropped outside any droppable area.");
         return;
       }
 
@@ -89,7 +85,6 @@ export const ChatMenu: FC<ChatMenuProps> = (props) => {
       }
 
       if (!foundGroupName) {
-        console.warn("Drag between groups is not allowed.");
         return;
       }
 
@@ -260,7 +255,6 @@ export const GroupChatThreadByType = (
       });
     }
   } else {
-    // Sortiere global nach Datum bei "newest" oder "oldest"
     orderedMenuItems = [...menuItems].sort((a, b) => {
       const dateA = new Date(a.lastMessageAt).getTime();
       const dateB = new Date(b.lastMessageAt).getTime();
