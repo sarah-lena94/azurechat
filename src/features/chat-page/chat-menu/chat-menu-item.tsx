@@ -23,6 +23,7 @@ interface ChatMenuItemProps {
   href: string;
   chatThread: ChatThreadModel;
   children?: React.ReactNode;
+  onClick?: (e: any) => void;
 }
 
 export const ChatMenuItem: FC<ChatMenuItemProps> = (props) => {
