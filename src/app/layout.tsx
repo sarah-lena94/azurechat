@@ -1,8 +1,7 @@
 import { AI_DESCRIPTION, AI_NAME } from "@/features/theme/theme-config";
-import { ThemeProvider } from "@/features/theme/theme-provider";
+import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Metadata } from "next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,6 +15,10 @@ export const metadata: Metadata = {
   description: AI_DESCRIPTION,
 }
 
+interface LayoutClientProps {
+  children: React.ReactNode;
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -24,9 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className={`${inter.className} font-inter`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange={false}>
           {children}
-        </ThemeProvider>
       </body>
     </html>
   )

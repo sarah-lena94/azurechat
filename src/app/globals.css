@@ -81,6 +81,16 @@
   }
 }
 
+/* Aithoria color palette */
+:root {
+  --aithoria-gray-light: 0 0% 97%;
+  --aithoria-dark: 210 67% 7%;
+  --aithoria-navy: 210 60% 14%;
+  --aithoria-orange: 30 80% 55%;
+  --aithoria-blue-medium: 220 70% 50%;
+  --aithoria-cyan: 180 65% 55%;
+}
+
 @layer base {
   * {
     @apply border-border;
