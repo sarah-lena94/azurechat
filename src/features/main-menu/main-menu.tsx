@@ -53,7 +53,7 @@ export const MainMenu = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`w-8 h-8 p-0 rounded-xl transition-all duration-200 hover-lift group relative ${isActive
+                    className={`w-8 h-8 p-0 rounded-xl transition-all duration-200 hover-lift relative hover:bg-sidebar-hover group ${isActive
                       ? "text-primary bg-secondary shadow-lg"
                       : "hover:bg-muted text-foreground hover:text-primary"
                       }`}
