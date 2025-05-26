@@ -1,20 +1,17 @@
 "use client";
 import { Hero, HeroButton } from "@/features/ui/hero";
-import { Atom, Languages, VenetianMask } from "lucide-react";
+import { Atom, Languages, PocketKnife, VenetianMask } from "lucide-react";
 import { personaStore } from "../persona-store";
 
 export const PersonaHero = () => {
   return (
     <Hero
       title={
-        <div className="flex items-center gap-3 mb-4">
-          <VenetianMask className="w-8 h-8 text-[var(--aithoria-blue-medium)] dark:text-[var(--aithoria-cyan)]" />
-          <h1 className="text-3xl font-bold text-[var(--aithoria-dark)] dark:text-white bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
-            Persona
-          </h1>
-        </div>
+        <>
+          <PocketKnife size={36} strokeWidth={1.5} /> Persona
+        </>
       }
-      description={`  Persona is a representation of a personality that you can use to
+      description={`Persona is a representation of a personality that you can use to
     have a conversation with.`}
     >
       <HeroButton

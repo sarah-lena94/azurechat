@@ -25,7 +25,7 @@ interface ChatReportingProps {
 export const ChatReportingPage: FC<ChatReportingProps> = async (props) => {
   return (
     <ScrollArea className="flex-1">
-      <main className="flex flex-1 flex-col bg-gradient-to-b from-white dark:from-[#061826] to-[#F0F0F0]/50 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
+      <main className="flex flex-1 flex-col bg-gradient-to-b from-white dark:from-[#061826] to-aithoria-orange/10 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
         <ReportingHero />
         <Suspense fallback={<PageLoader />} key={props.page}>
           <ReportingContent {...props} />

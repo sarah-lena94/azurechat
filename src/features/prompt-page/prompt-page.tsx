@@ -18,7 +18,7 @@ export const ChatSamplePromptPage: FC<ChatSamplePromptProps> = async (
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-gradient-to-b from-white dark:from-[#061826] to-[#F0F0F0]/50 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
+    <div className="flex-1 flex flex-col bg-gradient-to-b from-white dark:from-[#061826] to-aithoria-orange/10 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
       <div className="flex-1 p-8">
         <div className="max-w-6xl mx-auto">
           <PromptHero />
