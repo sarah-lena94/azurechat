@@ -26,7 +26,8 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
                 width={60}
                 height={60}
                 quality={100}
-                alt="alt"
+                alt="aithoria icon"
+                className="rounded-full"
               />{" "}
               {AI_NAME}
             </>
