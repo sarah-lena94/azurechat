@@ -22,7 +22,7 @@
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 0 0% 97%; /* aithoria-gray-light */
     --muted-foreground: 210 10% 40%;
-    --accent: 30 80% 55%; /* aithoria-orange */
+    --accent: 193 70% 80%; /* aithoria-blue lightened */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
@@ -61,7 +61,7 @@
     --secondary-foreground: 0 0% 100%;
     --muted: 210 60% 14%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 30 80% 55%; /* orange */
+    --accent: 217 61% 15%; /* aithoria-blue lightened */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
