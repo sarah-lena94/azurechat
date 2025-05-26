@@ -10,7 +10,14 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      screens: {},
+      padding: "1rem",
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
     },
     extend: {
       colors: {
@@ -47,6 +54,12 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "aithoria-blue-medium": "hsl(var(--aithoria-blue-medium))",
+        "aithoria-orange": "hsl(var(--aithoria-orange))",
+        "aithoria-cyan": "hsl(var(--aithoria-cyan))",
+        "aithoria-dark": "hsl(var(--aithoria-dark))",
+        "aithoria-navy": "hsl(var(--aithoria-navy))",
+        "aithoria-gray-light": "hsl(var(--aithoria-gray-light))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -70,4 +83,10 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  variants: {
+    extend: {
+      backgroundColor: ["group-hover", "data-active", "aria-selected"],
+      opacity: ["disabled"],
+    },
+  },
 };
