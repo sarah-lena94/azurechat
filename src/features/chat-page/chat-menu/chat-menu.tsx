@@ -133,7 +133,7 @@ export const ChatMenu: FC<ChatMenuProps> = (props) => {
 
   return (
     <div className="px-3 flex flex-col overflow-hidden">
-      <div className="w-full flex flex-end mr-2 mt-3">
+      <div className="w-full flex flex-end mr-2 mt-1" style={{ justifyContent: 'flex-end' }}>
         <Select
           value={sortOrder}
           onValueChange={(value) => {
@@ -227,13 +227,13 @@ export const ChatGroupComponent: FC<ChatGroupProps> = ({ title, items }) => {
 
 const ChatGroupWrapper: FC<ChatGroupProps> = ({ title, items }) => {
   return (
-      <div key={title}>
-        <h3>{title}</h3>
-        <SortableContext items={items.map((item) => item.id.toString())}>
-          {items.map((item) => (
-            <SortableItem key={item.id.toString()} item={item} />
-          ))}
-        </SortableContext>
+    <div key={title}>
+      <h3>{title}</h3>
+      <SortableContext items={items.map((item) => item.id.toString())}>
+        {items.map((item) => (
+          <SortableItem key={item.id.toString()} item={item} />
+        ))}
+      </SortableContext>
     </div>
   );
 };
