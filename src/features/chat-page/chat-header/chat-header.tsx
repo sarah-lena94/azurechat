@@ -1,6 +1,5 @@
 import { ExtensionModel } from "@/features/extensions-page/extension-services/models";
 import { CHAT_DEFAULT_PERSONA } from "@/features/theme/theme-config";
-import { VenetianMask } from "lucide-react";
 import { FC } from "react";
 import { ChatDocumentModel, ChatThreadModel } from "../chat-services/models";
 import { DocumentDetail } from "./document-detail";
@@ -20,13 +19,11 @@ export const ChatHeader: FC<Props> = (props) => {
       ? CHAT_DEFAULT_PERSONA
       : props.chatThread.personaMessageTitle;
   return (
-    <div className="bg-background border-b flex items-center py-2">
-      <div className="container max-w-3xl flex justify-between items-center">
-        <div className="flex flex-col">
-          <span>{props.chatThread.name}</span>
-          <span className="text-sm text-muted-foreground flex gap-1 items-center">
-            <VenetianMask size={18} />
-            {persona}
+    <div className="p-4 bg-gradient-to-r from-[#F0F0F0]/50 to-white/50 dark:from-[#0E2E70]/50 dark:to-[#061826]/50 backdrop-blur-md transition-colors duration-200 shadow-md">
+      <div className="container mx-auto flex items-center justify-between py-2">
+        <div className="flex items-center space-x-3">
+          <span className="text-xl font-semibold text-[#061826] dark:text-white tracking-tight">
+            {props.chatThread.name}
           </span>
         </div>
         <div className="flex gap-2">

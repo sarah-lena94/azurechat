@@ -17,7 +17,7 @@ interface ChatPersonaProps {
 export const ChatHome: FC<ChatPersonaProps> = (props) => {
   return (
     <ScrollArea className="flex-1">
-      <main className="flex flex-1 flex-col gap-6 pb-6">
+      <main className="flex flex-1 flex-col gap-6 pb-6 bg-gradient-to-b from-white dark:from-[#061826] to-aithoria-orange/10 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
         <Hero
           title={
             <>
@@ -26,7 +26,8 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
                 width={60}
                 height={60}
                 quality={100}
-                alt="alt"
+                alt="aithoria icon"
+                className="rounded-full"
               />{" "}
               {AI_NAME}
             </>

@@ -34,7 +34,7 @@ interface ChatMenuProps {
 export const ChatMenu: FC<ChatMenuProps> = (props) => {
   const [sortOrder, setSortOrder] = useState<"custom" | "newest" | "oldest">("newest");
   const [activeMenuItems, setActiveMenuItems] = useState<ChatThreadModel[]>(() => {
-    const storedOrder = localStorage.getItem("chatMenuOrder");
+   const storedOrder = typeof window !== 'undefined' ? localStorage.getItem("chatMenuOrder") : null;
     if (storedOrder) {
       const orderIds = JSON.parse(storedOrder) as string[];
       const ordered = orderIds
@@ -132,35 +132,39 @@ export const ChatMenu: FC<ChatMenuProps> = (props) => {
   const menuItemsGrouped = GroupChatThreadByType(activeMenuItems, sortOrder);
 
   return (
-    <div className="px-3 flex flex-col gap-8 overflow-hidden">
-      <Select
-        value={sortOrder}
-        onValueChange={(value) => {
-          const newSortOrder = value as "newest" | "oldest";
-          setSortOrder(newSortOrder);
-          setActiveMenuItems((prevItems) => {
-            return [...prevItems].sort((a, b) => {
-              const dateA = new Date(a.lastMessageAt).getTime();
-              const dateB = new Date(b.lastMessageAt).getTime();
-              return newSortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    <div className="px-3 flex flex-col overflow-hidden">
+      <div className="w-full flex flex-end mr-2 mt-1" style={{ justifyContent: 'flex-end' }}>
+        <Select
+          value={sortOrder}
+          onValueChange={(value) => {
+            const newSortOrder = value as "newest" | "oldest";
+            setSortOrder(newSortOrder);
+            setActiveMenuItems((prevItems) => {
+              return [...prevItems].sort((a, b) => {
+                const dateA = new Date(a.lastMessageAt).getTime();
+                const dateB = new Date(b.lastMessageAt).getTime();
+                return newSortOrder === "newest" ? dateB - dateA : dateA - dateB;
+              });
             });
-          });
-        }}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Sort by" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="newest">Newest to Oldest</SelectItem>
-          <SelectItem value="oldest">Oldest to Newest</SelectItem>
-          <SelectItem value="custom">Custom Order</SelectItem>
-        </SelectContent>
-      </Select>
+          }}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest to Oldest</SelectItem>
+            <SelectItem value="oldest">Oldest to Newest</SelectItem>
+            <SelectItem value="custom">Custom Order</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        {Object.entries(menuItemsGrouped).map(([groupName, groupItems]) => (
-          <ChatGroupComponent key={groupName} title={groupName} items={groupItems} />
-        ))}
-      </DndContext>
+      <div className="flex flex-col gap-8">
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          {Object.entries(menuItemsGrouped).map(([groupName, groupItems]) => (
+            <ChatGroupComponent key={groupName} title={groupName} items={groupItems} />
+          ))}
+        </DndContext>
+      </div>
     </div>
   );
 };
@@ -241,7 +245,7 @@ export const GroupChatThreadByType = (
   let orderedMenuItems: ChatThreadModel[] = [...menuItems];
 
   if (sortOrder === "custom") {
-    const storedOrder = localStorage.getItem("chatMenuOrder");
+    const storedOrder = typeof window !== 'undefined' ? localStorage.getItem("chatMenuOrder") : null;
     if (storedOrder) {
       const order = JSON.parse(storedOrder) as string[];
       orderedMenuItems = order

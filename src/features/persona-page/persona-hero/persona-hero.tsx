@@ -1,6 +1,6 @@
 "use client";
 import { Hero, HeroButton } from "@/features/ui/hero";
-import { Atom, Languages, VenetianMask } from "lucide-react";
+import { Atom, Languages, PocketKnife, VenetianMask } from "lucide-react";
 import { personaStore } from "../persona-store";
 
 export const PersonaHero = () => {
@@ -8,10 +8,10 @@ export const PersonaHero = () => {
     <Hero
       title={
         <>
-          <VenetianMask size={36} strokeWidth={1.5} /> Persona
+          <PocketKnife size={36} strokeWidth={1.5} /> Persona
         </>
       }
-      description={`  Persona is a representation of a personality that you can use to
+      description={`Persona is a representation of a personality that you can use to
     have a conversation with.`}
     >
       <HeroButton
@@ -53,7 +53,7 @@ Example:
         onClick={() =>
           personaStore.newPersonaAndOpen({
             name: "ReactJS Expert",
-            personaMessage: `You are a ReactJS expert who can write clean functional components. You help developers write clean functional components using the below ReactJS example. 
+            personaMessage: `You are a ReactJS expert who can write clean functional components. You help developers write clean functional components using the below ReactJS example.
               \nExample:
 import * as React from "react";
 
