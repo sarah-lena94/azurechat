@@ -17,7 +17,7 @@ interface ChatPersonaProps {
 export const ChatHome: FC<ChatPersonaProps> = (props) => {
   return (
     <ScrollArea className="flex-1">
-      <main className="flex flex-1 flex-col gap-6 pb-6">
+      <main className="flex flex-1 flex-col gap-6 pb-6 bg-gradient-to-b from-white dark:from-[#061826] to-[#F0F0F0]/50 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
         <Hero
           title={
             <>
