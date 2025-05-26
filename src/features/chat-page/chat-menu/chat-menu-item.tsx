@@ -33,13 +33,13 @@ export const ChatMenuItem: FC<ChatMenuItemProps> = (props) => {
   });
 
   return (
-    <div className="flex group hover:bg-muted pr-3 text-muted-foreground rounded-sm hover:text-muted-foreground">
+    <div className="flex justify-between group w-full pr-3 text-muted-foreground rounded-sm hover:text-muted-foreground">
       <Link
         href={props.href}
         className={cn(
-          "flex-1 flex items-center gap-2 p-3 overflow-hidden",
+          "flex-1 flex items-center gap-2 p-3 overflow-hidden hover:text-aithoria-orange",
           path.startsWith(props.href) && props.href !== "/"
-            ? "text-primary"
+            ? "text-aithoria-blue-medium"
             : ""
         )}
       >
