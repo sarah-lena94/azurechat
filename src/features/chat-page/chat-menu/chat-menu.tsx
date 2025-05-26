@@ -34,7 +34,7 @@ interface ChatMenuProps {
 export const ChatMenu: FC<ChatMenuProps> = (props) => {
   const [sortOrder, setSortOrder] = useState<"custom" | "newest" | "oldest">("newest");
   const [activeMenuItems, setActiveMenuItems] = useState<ChatThreadModel[]>(() => {
-    const storedOrder = localStorage.getItem("chatMenuOrder");
+   const storedOrder = typeof window !== 'undefined' ? localStorage.getItem("chatMenuOrder") : null;
     if (storedOrder) {
       const orderIds = JSON.parse(storedOrder) as string[];
       const ordered = orderIds
@@ -245,7 +245,7 @@ export const GroupChatThreadByType = (
   let orderedMenuItems: ChatThreadModel[] = [...menuItems];
 
   if (sortOrder === "custom") {
-    const storedOrder = localStorage.getItem("chatMenuOrder");
+    const storedOrder = typeof window !== 'undefined' ? localStorage.getItem("chatMenuOrder") : null;
     if (storedOrder) {
       const order = JSON.parse(storedOrder) as string[];
       orderedMenuItems = order
