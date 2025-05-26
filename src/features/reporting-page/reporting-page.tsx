@@ -25,7 +25,7 @@ interface ChatReportingProps {
 export const ChatReportingPage: FC<ChatReportingProps> = async (props) => {
   return (
     <ScrollArea className="flex-1">
-      <main className="flex flex-1 flex-col">
+      <main className="flex flex-1 flex-col bg-gradient-to-b from-white dark:from-[#061826] to-[#F0F0F0]/50 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
         <ReportingHero />
         <Suspense fallback={<PageLoader />} key={props.page}>
           <ReportingContent {...props} />
@@ -52,7 +52,7 @@ async function ReportingContent(props: ChatReportingProps) {
   const chatThreads = chatHistoryResponse.response;
   const hasMoreResults = chatThreads.length === SEARCH_PAGE_SIZE;
   return (
-    <div className="bg-card dark:bg-aithoria-dark rounded-lg border border-border overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg bg-opacity-70 dark:bg-opacity-70 backdrop-filter backdrop-blur-md">
+    <div className="flex self-center bg-card w-[70rem] dark:bg-aithoria-dark rounded-lg border border-border overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg bg-opacity-70 dark:bg-opacity-70 backdrop-filter backdrop-blur-md">
       <Table>
         <TableHeader>
           <TableRow>

@@ -12,7 +12,7 @@ interface ChatPersonaProps {
 export const ChatPersonaPage: FC<ChatPersonaProps> = (props) => {
   return (
     <ScrollArea className="flex-1">
-      <div className="flex-1 flex flex-col bg-[var(--aithoria-gray-light)]/30 dark:bg-[var(--aithoria-dark)] transition-colors duration-200">
+      <div className="flex-1 flex flex-col bg-gradient-to-b from-white dark:from-[#061826] to-[#F0F0F0]/50 dark:to-[#0A234B]/50 transition-colors duration-200 h-screen">
         <div className="flex-1 p-8">
           <div className="max-w-6xl mx-auto">
             <PersonaHero />
